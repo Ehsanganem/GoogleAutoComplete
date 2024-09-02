@@ -1,36 +1,41 @@
+import concurrent.futures
+from collections import defaultdict
+from fuzzywuzzy import fuzz
+
+
 class InvertedIndex:
-  def __init__(self, documents, n=2):
-    self.inverted_index = self.create_inverted_index(documents, n)
+    def __init__(self, documents, n=2):
+        self.inverted_index = selgf.create_inverted_index(documents, n)
 
-  def create_inverted_index(self, documents, n=2):
-    inverted_index = {}
+    def create_inverted_index(self, documents, n=2):
+        inverted_index = defaultdict(set)  # Use a set instead of a list for faster lookups
 
-    for document in documents:
-      words = document.split()
-      ngrams = [tuple(words[i:i+n]) for i in range(len(words) - n + 1)]
+        for document in documents:
+            words = document.split()
+            ngrams = [tuple(words[i:i + n]) for i in range(len(words) - n + 1)]
 
-      for ngram in ngrams:
-        if ngram not in inverted_index:
-          inverted_index[ngram] = []
-        inverted_index[ngram].append(document)
+            for ngram in ngrams:
+                inverted_index[ngram].add(document)
 
-    return inverted_index
+        return inverted_index
 
-  def retrieve_documents(self, query_ngram):
-    if query_ngram in self.inverted_index:
-      return self.inverted_index[query_ngram]
-    else:
-      return []
+    import concurrent.futures
 
-# Test the inverted index
-documents = [
-    "The quick brown fox jumps over the lazy dog.",
-    "The lazy dog slept in the sun.",
-    "The fox and the dog are friends."
-]
+    def retrieve_documents(self, query_ngram, threshold=80):
+        matched_documents = set()  # Use a set to avoid duplicates and for faster operations
+        query_ngram_str = ' '.join(query_ngram)
 
-inverted_index = InvertedIndex(documents, n=2)
+        def match_ngrams(ngram_docs_pair):
+            ngram, docs = ngram_docs_pair
+            ngram_str = ' '.join(ngram)
+            if fuzz.partial_ratio(query_ngram_str, ngram_str) >= threshold:
+                return docs
+            return set()
 
-query_ngram = ("the", "lazy")
-document_ids = inverted_index.retrieve_documents(query_ngram)
-print(document_ids)  # Output: [0, 1]
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            results = executor.map(match_ngrams, self.inverted_index.items())
+
+        for docs in results:
+            matched_documents.update(docs)
+
+        return list(matched_documents)
