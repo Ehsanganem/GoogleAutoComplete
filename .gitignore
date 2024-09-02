@@ -1,5 +1,5 @@
 .idea/
-reverse_index.json
+reverse_index*
 reverse_index_full.json
 
 __pycache__/

@@ -1,8 +1,10 @@
 from LoaderModule import LoaderModule
+
 """
-this script is used to create the initial data base
-as the file is over 4.4 gigs we wont upload it to the github
+This script is used to create the initial database.
+As the file is over 4.4 GB, we won't upload it to the GitHub repository.
 """
+
 if __name__ == "__main__":
     loader = LoaderModule()
 
@@ -14,17 +16,8 @@ if __name__ == "__main__":
     if not loader.processed_files:
         print("No files were processed. Please check the directory path and file extensions.")
 
-    # Save the reverse index to a JSON file
-    print("Saving the reverse index as JSON...")
-    loader.save_index_json('reverse_index.json')
-
-    # Print the reverse index to verify its contents
-    # print("Loaded Reverse Index Contents:")
-    # for word, file_metadata_list in reverse_index.index.items():
-    #     print(f"Word: '{word}'")
-    #     for metadata in file_metadata_list:
-    #         print(f"  File: {metadata.file_name}, Strings: {metadata.strings}")
+    # Save the reverse index to a MessagePack file
+    print("Saving the reverse index as MessagePack...")
+    loader.save_index_msgpack('reverse_index.msgpack')
 
     print("Processing completed successfully.")
-
-
