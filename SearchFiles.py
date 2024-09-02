@@ -2,10 +2,6 @@ from fuzzywuzzy import fuzz
 
 SIMILARITY_THRESHOLD = 80
 
-set1 = {1,2,3}
-set2 = {2,4}
-tmp = { "hello": set1, "world": set2 }
-
 
 def search_files(input_string: str, words_map: dict) -> list:
     """
@@ -28,6 +24,6 @@ def search_files(input_string: str, words_map: dict) -> list:
     return list(files)
 
 
-print(search_files("hello world", tmp))
+
 
 
