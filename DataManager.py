@@ -19,11 +19,11 @@ if __name__ == "__main__":
     loader.save_index_json('reverse_index.json')
 
     # Print the reverse index to verify its contents
-    print("Loaded Reverse Index Contents:")
-    for word, file_metadata_list in reverse_index.index.items():
-        print(f"Word: '{word}'")
-        for metadata in file_metadata_list:
-            print(f"  File: {metadata.file_name}, Strings: {metadata.strings}")
+    # print("Loaded Reverse Index Contents:")
+    # for word, file_metadata_list in reverse_index.index.items():
+    #     print(f"Word: '{word}'")
+    #     for metadata in file_metadata_list:
+    #         print(f"  File: {metadata.file_name}, Strings: {metadata.strings}")
 
     print("Processing completed successfully.")
 

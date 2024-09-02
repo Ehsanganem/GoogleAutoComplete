@@ -1,12 +1,13 @@
 import os
 import json
-from collections import defaultdict
+from SearchFiles import search_files
 from concurrent.futures import ThreadPoolExecutor
 from functools import lru_cache
 
 from ReverseIndexDB import ReverseIndex
 from ScoreFunction import sentences_score
 import timeit
+from ReverseIndexDB import FileMetadata
 
 class LoaderModule:
     @lru_cache(maxsize=128)  # Cache the results of the search
@@ -66,35 +67,9 @@ class LoaderModule:
         import string
         return text.lower().translate(str.maketrans('', '', string.punctuation)).strip()
 
-    def search(self, query, inverted_index, top_n=5, threshold=80):
+    def search(self, query, top_n=5, threshold=80):
         """Search for relevant documents based on the query and rank them by likeness score."""
-        preprocessed_query = self.preprocess_text(query)
-        query_words = preprocessed_query.split()
-
-        if len(query_words) < 2:
-            # If the query is a single word, treat the whole word as the search term
-            query_ngrams = [tuple(query_words)]
-        else:
-            # Otherwise, create n-grams as usual
-            query_ngrams = [tuple(query_words[i:i + 2]) for i in range(len(query_words) - 1)]
-
-        # Retrieve documents using fuzzy matching
-        retrieved_documents = []
-        for ngram in query_ngrams:
-            retrieved_documents.extend(inverted_index.retrieve_documents(ngram, threshold=threshold))
-
-        # Remove duplicates
-        retrieved_documents = list(set(retrieved_documents))
-
-        # Score the retrieved documents based on likeness
-        scored_results = []
-        for doc in retrieved_documents:
-            score = sentences_score(preprocessed_query, doc)
-            scored_results.append((doc, score))
-
-        # Sort results by score in descending order and return the top N results
-        scored_results.sort(key=lambda x: x[1], reverse=True)
-        return scored_results[:top_n]
+        return search_files(query,self.reverse_index)
 
     def save_index_json(self, filename):
         """Saves the reverse index to a JSON file."""
@@ -113,4 +88,26 @@ class LoaderModule:
         with open(filename, 'w', encoding='utf-8') as f:
             json.dump(reverse_index_data, f, ensure_ascii=False, indent=4)
         print(f"Reverse index saved to {filename} in JSON format.")
+
+    def load_reverse_index_from_json(self, filename):
+        """Loads the reverse index from a JSON file into the ReverseIndex instance."""
+
+        def dict_to_metadata(metadata_dict):
+            """Converts a dictionary back to a FileMetadata object."""
+            file_name = metadata_dict['file_name']
+            strings = [(entry['original'], entry['processed']) for entry in metadata_dict['strings']]
+            metadata = FileMetadata(file_name)
+            metadata.strings.extend(strings)
+            return metadata
+
+        with open(filename, 'r', encoding='utf-8') as f:
+            reverse_index_data = json.load(f)
+
+        # Rebuild the reverse index inside the existing ReverseIndex instance
+        for word, metadata_list in reverse_index_data.items():
+            self.reverse_index.index[word] = [dict_to_metadata(metadata) for metadata in metadata_list]
+
+        print(f"Reverse index loaded from {filename}.")
+
+
 
