@@ -5,7 +5,7 @@ from fuzzywuzzy import fuzz
 
 class InvertedIndex:
     def __init__(self, documents, n=2):
-        self.inverted_index = selgf.create_inverted_index(documents, n)
+        self.inverted_index = self.create_inverted_index(documents, n)
 
     def create_inverted_index(self, documents, n=2):
         inverted_index = defaultdict(set)  # Use a set instead of a list for faster lookups
