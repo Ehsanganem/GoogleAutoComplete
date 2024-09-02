@@ -1,6 +1,6 @@
 from fuzzywuzzy import fuzz
 
-SIMILARITY_THRESHOLD = 80
+SIMILARITY_THRESHOLD = 70
 
 
 def search_files(input_string: str, words_map: dict) -> list:

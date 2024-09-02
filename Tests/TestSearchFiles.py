@@ -9,6 +9,8 @@ HELLO = "hello"
 HELO = "helo"
 ORLD = "orld"
 
+MISTAKE_HELLO = "helok"
+
 
 def test_search_files():
     res = search_files(HELLO_WORLD, WORD_DICT)
@@ -36,7 +38,13 @@ def test_mistake_in_word3():
     assert not res == [2, 4]
 
 
+def test_mistake_in_word4():
+    res = search_files(MISTAKE_HELLO, WORD_DICT)
+    assert res == [1, 2, 3]
+
+
 def test_empty_intersection():
-    WORD_DICT[HELLO] = SET3
-    res = search_files(HELLO_WORLD, WORD_DICT)
+    tmp = WORD_DICT.copy()
+    tmp[HELLO] = SET3
+    res = search_files(HELLO_WORLD, tmp)
     assert res == []
