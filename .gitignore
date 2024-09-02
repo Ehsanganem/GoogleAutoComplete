@@ -1,1 +1,4 @@
 .idea/
+reverse_index.json
+__pycache__/
+Text Archive/preprocessed_data.json
