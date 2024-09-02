@@ -1,3 +1,0 @@
-this is a test and its #1
-hello world
-example
