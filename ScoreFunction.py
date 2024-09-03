@@ -8,7 +8,6 @@ def sentences_score(input_string, target_string) -> int:
 
     """
     input_string = ' '.join(input_string.lower().split())
-    target_string = target_string.lower()
     score = 0
 
     # Compare characters up to the length of the shorter string

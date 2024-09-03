@@ -1,5 +1,4 @@
-import os
-import time
+
 from LoaderModule import LoaderModule
 from ScoreFunction import sentences_score
 
@@ -25,8 +24,9 @@ def main():
 
         user_input += new_input
 
+
+
         # Time the search using timeit
-        start = time.time()
         # Search for matching original strings and file names
         matching_results = loader.search(user_input.strip())
 
@@ -43,10 +43,9 @@ def main():
 
         # Sort by score in descending order and display the top 5 completions
         scored_results.sort(key=lambda x: x[3], reverse=True)
-        stop = time.time()
-        elapsed = stop - start
-        print(f"Time for search was {elapsed}")
         display_completions(scored_results)
+
+
 
 
 def display_completions(scored_results):
@@ -60,5 +59,3 @@ def display_completions(scored_results):
 
 if __name__ == "__main__":
     main()
-
-
