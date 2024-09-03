@@ -2,6 +2,8 @@ from fuzzywuzzy import fuzz
 from ReverseIndexDB import ReverseIndex
 
 SIMILARITY_THRESHOLD = 70
+LEN_DIFF = 3
+
 
 def search_files(input_string: str, reverse_index: ReverseIndex) -> list:
     """
@@ -22,6 +24,8 @@ def search_files(input_string: str, reverse_index: ReverseIndex) -> list:
 
         # Iterate over all words in the reverse index
         for word, metadata_list in reverse_index.index.items():
+            if abs(len(input_word) - len(word)) > LEN_DIFF:
+                continue
             similarity_score = fuzz.ratio(input_word, word)
             if similarity_score > SIMILARITY_THRESHOLD:
                 # If the word is a match, add its associated original strings to the current_matched_strings set
