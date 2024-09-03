@@ -1,4 +1,4 @@
-def sentences_score(input_string, target_string) -> int:
+def sentences_score(input_string, target_string, score=0) -> int:
     """
     This function calculates the score of the input string based on the target string.
 
@@ -7,33 +7,25 @@ def sentences_score(input_string, target_string) -> int:
     target_string: The target string to be scored against.
 
     """
+
     input_string = ' '.join(input_string.lower().split())
-    score = 0
-
-    # Compare characters up to the length of the shorter string
-    min_length = min(len(input_string), len(target_string))
-
-    for i in range(min_length):
+    target_string = target_string.lower()
+    for i in range(min(len(target_string), len(input_string))):
         if target_string[i] == input_string[i]:
             score += 2
         else:
-            if i > 0 and input_string[i] == input_string[i-1]:
-                score -= sub_score_for_missing_or_duplicate_char(i)
-            elif i < len(target_string) - 1 and input_string[i] == target_string[i+1]:
-                score -= sub_score_for_missing_or_duplicate_char(i)
+            if input_string[i] == input_string[i-1]:
+                return sentences_score(input_string[:i] + input_string[i+1:], target_string, -sub_score_for_missing_or_duplicate_char(i))
+            elif len(target_string)>len(input_string) and input_string[i] == target_string[i+1]:
+                return sentences_score(input_string[:i] + "!" + input_string[i:], target_string)
             else:
                 if i > 4:
                     score -= 1
                 else:
-                    score -= i + 1
-
-    # Penalize for any extra characters in the longer string
-    if len(input_string) > min_length:
-        score -= (len(input_string) - min_length)
-    elif len(target_string) > min_length:
-        score -= (len(target_string) - min_length)
+                    score -= 5-i
 
     return score
+
 
 def sub_score_for_missing_or_duplicate_char(index: int) -> int:
     """
