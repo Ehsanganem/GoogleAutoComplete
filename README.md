@@ -53,8 +53,10 @@ The matching strings are ranked based on how closely they align with the input, 
 
 To install the required dependencies, run:
 
-### bash
-pip install rapidfuzz msgpack
+  ```bash
+  pip install rapidfuzz msgpack
+  ```
+
 ### Scoring System
 Exact Match: The base score is twice the number of matched characters.
 Character Replacement: Penalties are applied for each replaced character:
@@ -64,3 +66,5 @@ Character Replacement: Penalties are applied for each replaced character:
 4th replacement: -2 points
 5th replacement and onward: -1 point
 Character Insertion/Deletion: -2 points are deducted for an insertion or deletion, with higher penalties for the first 4 characters.
+
+![alt text](image.png)
